@@ -7,67 +7,79 @@ window.onload  = function () {
     var	h4 = document.createElement('h4');
     var div = document.createElement('div');
     var ul = document.createElement('ul');
+    var li = document.createElement('li');
 
-    var wrapper = document.getElementsByClassName('wrapper');
-    var btn = document.getElementById('btn');
+    var btnLoad = document.getElementById('load');
     var btnClear = document.getElementById('clear');
 
-
+    var i=0;
 
     // element constructor
     h1.innerHTML = '#07 task';
     h2.innerHTML = 'Phone Book  via xmlHttpRequest';
-   // h4.innerText = 'www';
+
+    var divContainerL = div.cloneNode(false);
+    divContainerL.className = 'container';
+    var divContainerR = divContainerL.cloneNode(false);
 
     var divWrapper = div.cloneNode(false);
     divWrapper.className = 'wrapper';
 
+    var cover = div.cloneNode(false);
 
 // page loading
     body.appendChild(h1);
     body.appendChild(h2);
     body.appendChild(divWrapper);
-    divWrapper.appendChild(h4);
-    divWrapper.appendChild(ul);
+    divWrapper.appendChild(divContainerL);
+    divWrapper.appendChild(divContainerR);
+    divContainerL.appendChild(cover);
+    //ul.appendChild(li);
+    loadClients();
 
-
-    btn.addEventListener('click' , loadClients);
-
+    // load data from JSON to the page
+    btnLoad.addEventListener('click', loadClients);
     function loadClients() {
         var xhr = new XMLHttpRequest();
-
         xhr.open('GET', '/json/clients.json', false);
         xhr.send();
-
         if (xhr.status != 200) {
             // обработать ошибку
             h4.innerHTML = xhr.status ;
         } else {
             // вывести результат
-            //h4.innerHTML = xhr.responseText;
             var clients = JSON.parse(xhr.responseText);
-            console.table( typeof clients);
             showClients(clients);
         }
     }
+    function showClients(obj) {
+        obj.forEach(function(obj) {
+            li = cover.appendChild(li.cloneNode(false));
+            li.innerHTML = obj.general.firstName + '  ' + obj.general.lastName;
+        });
+    }
 
+
+    // clear the page from data
     btnClear.addEventListener('click' , clearData);
     function clearData() {
-        while (ul.hasChildNodes()) {		// clear view
+        while (ul.hasChildNodes()) {
             ul.removeChild(ul.lastChild);
         }
     }
 
-    function showClients(obj) {
-
-        obj.forEach(function(obj) {
-            var li = ul.appendChild(document.createElement('li'));
-            li.innerHTML = obj.general.firstName + '  ' + obj.general.lastName;
-        });
-        console.log(123);
+    cover.addEventListener("click", selectUser);
+    function selectUser(event) {
+        var user = event.target;
+        for (i = 0; i<user.parentNode.childNodes.length; i++) {
+            if (user.parentNode.childNodes[i].classList.contains('active')) {
+                user.parentNode.childNodes[i].classList.remove('active');
+            }
+        }
+        user.classList.add('active');
+        console.log(i);
 
     }
-
 
 
 }
