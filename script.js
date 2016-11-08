@@ -64,6 +64,7 @@ window.onload  = function () {
             var li = ul.appendChild(document.createElement('li'));
             li.innerHTML = obj.general.firstName + '  ' + obj.general.lastName;
         });
+        console.log(123);
 
     }
 
