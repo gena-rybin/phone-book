@@ -1,9 +1,23 @@
 h2 {
     color: tomato;
 }
-.container {
+.left {
+    display: inline-block;
+    height: 400px;
+    overflow: auto;
+    overflow-y: scroll;
+}
+.right {
     display: inline-block;
 }
+
 .active{
     color: tomato;
+}
+.cover {
+    width:200px;
+    height:200px;
+    border:1px dashed tomato;
+    vertical-align:top; /* вот она */
+    display:inline-block;
 }
