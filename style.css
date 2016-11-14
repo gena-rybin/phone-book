@@ -9,6 +9,7 @@ h2 {
 }
 .right {
     display: inline-block;
+    margin-left: 20px;
 }
 
 .active{

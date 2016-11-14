@@ -9,11 +9,14 @@ window.onload  = function () {
     var ul = document.createElement('ul');
     var li = document.createElement('li');
     var p = document.createElement('p');
+    var input = document.createElement('input');
+    var label = document.createElement('label');
 
     var btnLoad = document.getElementById('load');
     var btnClear = document.getElementById('clear');
 
     var clients = {};
+    var selectedClients = [];
     var pos = 0;
     var user;
 
@@ -32,9 +35,20 @@ window.onload  = function () {
     var divFullData = div.cloneNode(false);
     divFullData.className = 'right';
 
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inpFilter');
+
+    label.setAttribute('for', 'inpFilter');
+    label.innerHTML = 'Filter for users below ';
+
+
 // page loading
     body.appendChild(h1);
     body.appendChild(h2);
+    body.appendChild(label);
+    body.appendChild(input);
+    body.appendChild(document.createElement('br'));
+    body.appendChild(document.createElement('br'));
     body.appendChild(divWrapper);
     divWrapper.appendChild(divShortData);
     divWrapper.appendChild(divFullData);
@@ -55,7 +69,8 @@ window.onload  = function () {
         } else {
             // вывести результат
             clients = JSON.parse(xhr.responseText);
-            showClients(clients);
+            clearData();
+            selectData();
         }
     }
     function showClients(obj) {
@@ -67,7 +82,23 @@ window.onload  = function () {
     }
 
 
-    // clear the page from data
+    // Filter for clients-data
+    input.addEventListener('keyup' , selectData);
+    function selectData() {
+        selectedClients = [];
+        var filt = '';
+        if(input.value.length){
+            filt = input.value.toLowerCase();
+        }
+        selectedClients = clients.filter(function(item) {
+            return item.general.firstName.toLowerCase().match(filt);
+        })
+        clearData();
+        showClients(selectedClients);
+    }
+
+
+        // clear the page from data
     btnClear.addEventListener('click' , clearData);
     function clearData() {
         while (divShortData.hasChildNodes()) {
@@ -111,10 +142,11 @@ window.onload  = function () {
 
     function showFullInfo() {
         deleteChilds(divFullData);
-        for (key in clients[pos]) {
-            for (ind in clients[pos][key]) {
+        for (key in selectedClients[pos]) {
+            for (ind in selectedClients[pos][key]) {
+                if (ind==='avatar') continue;
                 var p = divFullData.appendChild(document.createElement('p'));
-                p.innerText = ind + ': ' + clients[pos][key][ind];
+                p.innerText = ind + ': ' + selectedClients[pos][key][ind];
             }
         }
     }
